@@ -102,21 +102,15 @@ var playerType = graphql.NewObject(
 	},
 )
 
-var rootQuery = graphql.NewObject(graphql.ObjectConfig{
-	Name: "RootQuery",
-	Fields: graphql.Fields{
-		"accounts": &graphql.Field{
-			Type:        graphql.NewList(accountType),
-			Description: "Load all player accounts",
-			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-				acc := []otdb.Account{}
-				err := db.Select(&acc, "SELECT * FROM `accounts`")
-				if err != nil {
-					fmt.Printf("Accounts Query -- Error: %v", err)
-				}
-
-				return acc, nil
-			},
-		},
+var accountsQuery = &graphql.Field{
+	Type:        graphql.NewList(accountType),
+	Description: "Load all player accounts",
+	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+		acc := []otdb.Account{}
+		err := db.Select(&acc, "SELECT * FROM `accounts`")
+		if err != nil {
+			fmt.Printf("Accounts Query -- Error: %v", err)
+		}
+		return acc, nil
 	},
-})
+}
